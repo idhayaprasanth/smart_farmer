@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-slate-700;
+  }
+
+  html,
+  body,
+  #root {
+    @apply min-h-screen;
+  }
+
+  body {
+    @apply bg-night-grid text-slate-100 antialiased;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-glass;
+  }
+
+  .neon-border-green {
+    box-shadow: inset 0 0 0 1px rgba(34, 255, 136, 0.35), 0 0 24px rgba(34, 255, 136, 0.2);
+  }
+
+  .neon-border-blue {
+    box-shadow: inset 0 0 0 1px rgba(51, 187, 255, 0.35), 0 0 24px rgba(51, 187, 255, 0.2);
+  }
+
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(51, 187, 255, 0.5) transparent;
+  }
+
+  .scroll-thin::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scroll-thin::-webkit-scrollbar-thumb {
+    background: rgba(51, 187, 255, 0.45);
+    border-radius: 9999px;
+  }
+}

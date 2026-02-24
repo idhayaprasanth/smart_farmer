@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Smart Plant Monitoring System</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+}
+header {
+    background: #2e7d32;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 22px;
+}
+.container {
+    padding: 20px;
+}
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+.value {
+    font-size: 28px;
+    font-weight: bold;
+}
+.label {
+    color: gray;
+}
+button {
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+button:hover {
+    background: #1b5e20;
+}
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+}
+input {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 10px;
+}
+.close {
+    float: right;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>🌱 Smart Plant Monitoring Dashboard</header>
+
+<div class="container">
+
+<div class="card">
+    <strong>Active Field:</strong> <span id="activeField">Loading...</span>
+    <div style="margin-top:10px;">
+        <button onclick="openModal('fieldModal')">Create Field</button>
+        <button onclick="openModal('activeModal')">Set Active Field</button>
+        <button onclick="openModal('cropModal')">Create Crop</button>
+    </div>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <div class="label">Soil Moisture</div>
+        <div class="value" id="moisture">--</div>
+    </div>
+
+    <div class="card">
+        <div class="label">Temperature</div>
+        <div class="value" id="temperature">--</div>
+    </div>
+
+    <div class="card">
+        <div class="label">Humidity</div>
+        <div class="value" id="humidity">--</div>
+    </div>
+
+    <div class="card">
+        <div class="label">Motor Status</div>
+        <div class="value" id="motor">--</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>🌾 Active Crop</h3>
+    <pre id="liveCrop">Loading...</pre>
+</div>
+
+<div class="card">
+    <h3>🧠 AI Crop Plan</h3>
+    <pre id="planData">Loading...</pre>
+</div>
+
+</div>
+
+<!-- MODALS -->
+
+<div class="modal" id="fieldModal">
+<div class="modal-content">
+<span class="close" onclick="closeModal('fieldModal')">X</span>
+<h3>Create Field</h3>
+<input id="fieldName" placeholder="Field Name">
+<button onclick="createField()">Submit</button>
+</div>
+</div>
+
+<div class="modal" id="activeModal">
+<div class="modal-content">
+<span class="close" onclick="closeModal('activeModal')">X</span>
+<h3>Set Active Field</h3>
+<input id="activeFieldId" placeholder="field_1">
+<button onclick="setActive()">Submit</button>
+</div>
+</div>
+
+<div class="modal" id="cropModal">
+<div class="modal-content">
+<span class="close" onclick="closeModal('cropModal')">X</span>
+<h3>Create Crop</h3>
+<input id="cropFieldId" placeholder="field_1">
+<input id="cropName" placeholder="Crop Name">
+<input id="seedDate" placeholder="YYYY-MM-DD">
+<input id="soilType" placeholder="Soil Type">
+<button onclick="createCrop()">Submit</button>
+</div>
+</div>
+
+<script>
+
+const BASE_URL = "http://127.0.0.1:8000";
+
+function openModal(id){
+    document.getElementById(id).style.display="flex";
+}
+function closeModal(id){
+    document.getElementById(id).style.display="none";
+}
+
+async function loadDashboard(){
+    const res = await fetch(BASE_URL + "/dashboard");
+    const data = await res.json();
+
+    if(data.active_field){
+        document.getElementById("activeField").innerText = data.active_field;
+
+        if(data.live_sensor){
+            document.getElementById("moisture").innerText = data.live_sensor.moisture ?? "--";
+            document.getElementById("temperature").innerText = data.live_sensor.temperature ?? "--";
+            document.getElementById("humidity").innerText = data.live_sensor.humidity ?? "--";
+
+            document.getElementById("motor").innerText =
+                data.live_sensor.moisture < 40 ? "ON" : "OFF";
+        }
+
+        document.getElementById("liveCrop").innerText =
+            JSON.stringify(data.live_crop, null, 2);
+
+        const planRes = await fetch(BASE_URL + "/plans/" + data.active_field);
+        const plan = await planRes.json();
+        document.getElementById("planData").innerText =
+            JSON.stringify(plan, null, 2);
+    } else {
+        document.getElementById("activeField").innerText = "No Active Field";
+    }
+}
+
+async function createField(){
+    const name = document.getElementById("fieldName").value;
+    await fetch(BASE_URL + "/fields", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({name})
+    });
+    closeModal("fieldModal");
+    loadDashboard();
+}
+
+async function setActive(){
+    const id = document.getElementById("activeFieldId").value;
+    await fetch(BASE_URL + "/fields/set-active/" + id,{method:"POST"});
+    closeModal("activeModal");
+    loadDashboard();
+}
+
+async function createCrop(){
+    const field_id = document.getElementById("cropFieldId").value;
+    const crop_name = document.getElementById("cropName").value;
+    const seed_date = document.getElementById("seedDate").value;
+    const soil_type = document.getElementById("soilType").value;
+
+    await fetch(BASE_URL + "/crops",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({field_id,crop_name,seed_date,soil_type})
+    });
+    closeModal("cropModal");
+    loadDashboard();
+}
+
+loadDashboard();
+setInterval(loadDashboard, 5000);
+
+</script>
+
+</body>
+</html>

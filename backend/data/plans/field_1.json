@@ -1,0 +1,29 @@
+{
+    "crop_id": "crop_13",
+    "field_id": "field_1",
+    "status": "ready",
+    "plan": {
+        "soil_preparation": "Begin soil preparation immediately by deep plowing (30-45 cm) to improve aeration and break any existing hardpans. Incorporate 10-15 tons per acre of well-rotted farmyard manure or high-quality compost to enrich the red soil's organic matter content, improve water retention, and enhance nutrient availability. Conduct a comprehensive soil test to determine nutrient levels and pH. Based on results, apply agricultural lime if the pH is below 6.0, aiming for a target pH range of 6.0-6.8 for optimal tomato growth. Before planting, broadcast and incorporate a pre-plant fertilizer, such as a balanced NPK blend (e.g., 50 kg N, 100 kg P2O5, 50 kg K2O per acre), adjusting quantities according to soil test recommendations. Finally, form raised beds approximately 15-20 cm high and 90-120 cm wide to ensure excellent drainage and root development.",
+        "planting_phase": "Start tomato seeds indoors or in a protected nursery environment around the specified date of 2026-02-24. Use sterile seed starting mix and sow seeds 0.5 cm deep. Maintain a consistent soil temperature of 20-25\u00b0C for optimal germination, and provide adequate light (12-16 hours daily). Grow seedlings for 6-8 weeks until they are 15-20 cm tall with 4-6 true leaves. Prior to transplanting to the prepared raised beds, harden off the seedlings for 7-10 days by gradually exposing them to outdoor conditions (reduced watering, cooler temperatures, increased sunlight). Transplant seedlings deeply into the raised beds, burying part of the stem to encourage stronger root development. Space plants 45-60 cm apart within rows, with rows spaced 90-120 cm apart. Water thoroughly immediately after transplanting to settle the soil around the roots.",
+        "growth_timeline": [
+            {
+                "phase": "Seedling Establishment & Early Vegetative Growth",
+                "days_range": "0-30 days from transplant",
+                "key_actions": "Ensure consistent soil moisture; avoid waterlogging. Begin initial staking or caging for support to prevent lodging. Conduct daily scouting for early pests (e.g., cutworms, aphids) and diseases. If vegetative growth appears slow, apply a light side-dressing of a balanced NPK fertilizer."
+            },
+            {
+                "phase": "Flowering & Initial Fruit Set",
+                "days_range": "31-60 days from transplant",
+                "key_actions": "Maintain diligent and consistent deep watering, especially as flowers appear and small fruits begin to set, to prevent blossom end rot and fruit cracking. Fully implement the chosen support system (stakes, cages, or trellising). Prune suckers (shoots growing in leaf axils) on indeterminate varieties to direct energy towards fruit production and improve air circulation. Monitor pollination and ensure good air movement around plants. Apply a fertilizer higher in phosphorus and potassium to promote flowering and fruiting."
+            },
+            {
+                "phase": "Fruit Development & Maturation",
+                "days_range": "61-90 days from transplant",
+                "key_actions": "Continue consistent, deep watering, particularly during hot and dry periods. Avoid erratic watering, which can lead to fruit splitting. Intensify monitoring for common tomato diseases (e.g., early blight, late blight) and pests (e.g., tomato hornworms, fruitworms). Ensure good air circulation within the plant canopy. Consider foliar application of calcium if blossom end rot persists, assuming soil pH is within the optimal range. Reduce nitrogen inputs and focus on potassium."
+            }
+        ],
+        "expected_harvest": "First harvest of mature tomatoes is typically expected around 70-90 days from transplanting for early varieties, translating to approximately 100-120 days from the initial seed date of 2026-02-24. This projects a harvest window opening from late June to early July 2026. Harvest fruits when they achieve full color, are firm to the touch, and detach easily from the stem with a slight twist. Regular harvesting (every 1-3 days) is crucial as it encourages the plant to produce more fruit and prevents over-ripening on the vine.",
+        "pro_tips": "Implement a rigorous crop rotation strategy immediately. Given the previous rice monoculture, it is imperative to avoid planting tomatoes or other Solanaceae family members (potatoes, peppers, eggplant) in the same plot for at least 3-4 years to disrupt pest and disease cycles. Consider rotating with legumes, brassicas, or cereals. Utilize drip irrigation to deliver water directly to the root zone, minimizing foliar moisture and reducing fungal disease incidence. Apply a thick layer of organic mulch (e.g., straw) around plants to conserve soil moisture, suppress weeds, and stabilize soil temperature. Conduct regular soil tests (every 2-3 years) to fine-tune nutrient management. Pay close attention to calcium levels to prevent blossom end rot and boron for optimal fruit set. Employ Integrated Pest Management (IPM) techniques: regularly scout fields, use resistant varieties, practice good sanitation, and introduce beneficial insects before resorting to chemical controls."
+    },
+    "last_generated": "2026-02-24 19:10:30.864902"
+}
