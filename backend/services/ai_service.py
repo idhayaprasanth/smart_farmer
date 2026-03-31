@@ -6,8 +6,12 @@ import os
 from google import genai
 
 
-def _load_local_env() -> None:
-    """Load backend/.env without adding an external dependency."""
+def _load_local_env(*, override: bool = True) -> None:
+    """Load backend/.env without adding an external dependency.
+
+    By default this overrides existing environment variables so that a developer's
+    `backend/.env` reliably takes effect when running locally.
+    """
     env_path = Path(__file__).resolve().parents[1] / ".env"
     if not env_path.exists():
         return
@@ -17,8 +21,20 @@ def _load_local_env() -> None:
         if not line or line.startswith("#") or "=" not in line:
             continue
 
+        if line.startswith("export "):
+            line = line[len("export ") :].lstrip()
+
         key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+        key = key.strip()
+        value = value.strip()
+
+        if value and value[0] in {"'", '"'} and value[-1] == value[0]:
+            value = value[1:-1]
+        elif "#" in value:
+            value = value.split("#", 1)[0].rstrip()
+
+        if override or key not in os.environ:
+            os.environ[key] = value
 
 
 def _load_json(path: Path, default):
@@ -133,18 +149,30 @@ def _model_json(prompt: str, fallback: dict) -> dict:
             return parsed
         return fallback
     except Exception as exc:
-        print("AI ERROR:", str(exc))
+        message = str(exc)
+        print("AI ERROR:", message)
+        if "API Key not found" in message or "API_KEY_INVALID" in message:
+            print(
+                "AI HINT: Gemini API key was rejected. Ensure `GEMINI_API_KEY` is a valid Google AI Studio key "
+                "(not a different Google API key), that the Gemini/Generative Language API is enabled for the key, "
+                "and restart the backend after updating `backend/.env`."
+            )
         return fallback
 
 
 _load_local_env()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_API_KEY = (
+    os.getenv("GEMINI_API_KEY")
+    or os.getenv("GOOGLE_API_KEY")
+    or os.getenv("GENAI_API_KEY")
+)
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 if not GEMINI_API_KEY:
     raise RuntimeError(
-        "GEMINI_API_KEY is missing. Set it in backend/.env or environment variables."
+        "GEMINI_API_KEY is missing. Set it in backend/.env (preferred) or as an environment variable. "
+        "This backend also accepts GOOGLE_API_KEY or GENAI_API_KEY."
     )
 
 client = genai.Client(api_key=GEMINI_API_KEY)
@@ -408,4 +436,3 @@ Return only JSON:
         ).strip(),
         "recommendations": str(data.get("recommendations", fallback["recommendations"])).strip(),
     }
-
